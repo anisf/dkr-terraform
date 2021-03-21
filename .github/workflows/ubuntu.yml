@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: ubuntu/${{ matrix.ubuntu_version }}
+          context: ubuntu
           file: ./ubuntu/Dockerfile
           tags: anisfathallah/terraform:${{ matrix.terraform_version }}-ubuntu-${{ matrix.ubuntu_version }}
           build-args: |

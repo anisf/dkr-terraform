@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: alpine/${{ matrix.alpine_version }}
+          context: alpine
           file: ./alpine/Dockerfile
           tags: anisfathallah/terraform:${{ matrix.terraform_version }}-alpine-${{ matrix.alpine_version }}
           build-args: |
