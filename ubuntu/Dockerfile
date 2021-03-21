@@ -16,7 +16,7 @@ FROM ubuntu:${UBUNTU_VERSION}
 
 COPY --from=builder /usr/local/bin/terraform /usr/local/bin
 
-RUN adduser -S terraform
+RUN useradd --system terraform
 
 USER terraform
 WORKDIR /home/terraform
