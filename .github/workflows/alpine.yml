@@ -47,7 +47,7 @@ jobs:
       - name: Test builded image
         uses: addnab/docker-run-action@v1
         with:
-          image: terraform:${{ matrix.terraform_version }}
+          image: anisfathallah/terraform:${{ matrix.terraform_version }}-alpine-${{ matrix.alpine_version }}
           options: -v ${{github.workspace}}:/workspace
           run: |
             id
