@@ -16,7 +16,10 @@ FROM ubuntu:${UBUNTU_VERSION}
 
 COPY --from=builder /usr/local/bin/terraform /usr/local/bin
 
-RUN useradd --system terraform
+RUN apt update \
+    && apt install -y ca-certificates \
+    && rm -rf /var/lib/apt/lists/* /var/cache/* \
+    && useradd --system terraform
 
 USER terraform
 WORKDIR /home/terraform

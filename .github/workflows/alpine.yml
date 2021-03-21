@@ -52,7 +52,7 @@ jobs:
           run: |
             id
             cd /workspace
-            terraform --version
+            terraform version
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
