@@ -1,0 +1,62 @@
+name: "anisf.dkr-terraform.alpine"
+
+on:
+  push:
+    paths:
+      - 'alpine/**'
+      - '.github/workflows/alpine.yml'
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        alpine_version:
+        - edge
+        - latest
+        terraform_version:
+        - 0.14.8
+        - 0.13.6
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build terraform image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: alpine/${{ matrix.alpine_version }}
+          file: ./alpine/Dockerfile
+          tags: anisfathallah/terraform:${{ matrix.terraform_version }}-alpine-${{ matrix.alpine_version }}
+          build-args: |
+            TERRAFORM_VERSION=${{ matrix.terraform_version }}
+            ALPINE_VERSION=${{ matrix.alpine_version }}
+
+      - name: Test builded image
+        uses: addnab/docker-run-action@v1
+        with:
+          image: terraform:${{ matrix.terraform_version }}
+          options: -v ${{github.workspace}}:/workspace
+          run: |
+            id
+            cd /workspace
+            terraform --version
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'anisfathallah/terraform:${{ matrix.terraform_version }}-alpine-${{ matrix.alpine_version }}'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
