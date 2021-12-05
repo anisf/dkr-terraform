@@ -2,7 +2,7 @@ ARG UBUNTU_VERSION
 
 FROM ubuntu:${UBUNTU_VERSION} AS builder
 
-# Ansible versions : https://releases.hashicorp.com/terraform/
+# Terraform versions : https://releases.hashicorp.com/terraform/
 ARG TERRAFORM_VERSION
 ENV TERRAFORM_VERSION=${TERRAFORM_VERSION}
 LABEL terraform_version=${TERRAFORM_VERSION}
