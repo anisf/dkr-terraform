@@ -14,8 +14,9 @@ jobs:
         - devel
         - latest
         terraform_version:
-        - 0.14.8
-        - 0.13.6
+        - 0.15.5
+        - 0.14.11
+        - 0.13.7
         - 0.12.31
     steps:
       - name: Git checkout
