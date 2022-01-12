@@ -28,19 +28,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_ACCESS_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-      - name: Build terraform image
+      - name: Build Terraform image
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          push: true
-          context: alpine
-          file: ./alpine/Dockerfile
+          load: true
+          context: gcp
+          file: ./gcp/Dockerfile
           tags: anisfathallah/terraform:${{ matrix.terraform_version }}-gcp
           build-args: |
             TERRAFORM_VERSION=${{ matrix.terraform_version }}
-            ALPINE_VERSION=${{ matrix.alpine_version }}
 
-      - name: Test builded image
+      - name: Test Terraform image
         uses: addnab/docker-run-action@v1
         with:
           image: anisfathallah/terraform:${{ matrix.terraform_version }}-gcp
@@ -50,6 +49,18 @@ jobs:
             cd /workspace
             terraform version
             gcloud version
+
+
+      - name: Push Terraform image
+        id: docker_push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: gcp
+          file: ./gcp/Dockerfile
+          tags: anisfathallah/terraform:${{ matrix.terraform_version }}-gcp
+          build-args: |
+            TERRAFORM_VERSION=${{ matrix.terraform_version }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
