@@ -17,7 +17,7 @@ FROM ubuntu:${UBUNTU_VERSION}
 COPY --from=builder /usr/local/bin/terraform /usr/local/bin
 
 RUN apt update \
-    && apt install -y ca-certificates \
+    && apt install -y ca-certificates git \
     && rm -rf /var/lib/apt/lists/* /var/cache/* \
     && useradd --system terraform
 
